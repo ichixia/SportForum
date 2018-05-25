@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljc.dao.AdminDao">
+	
+	<resultMap type="Admin" id="AdminResult">
+		<id property="aid" column="aid"/>
+		<result property="admin_name" column="admin_name"/>
+		<result property="password" column="password"/>
+		<result property="headimg" column="headimg"/>
+		<result property="aid_num" column="aid_num"/>
+		<result property="status" column="status"/>
+	</resultMap>
+	
+	<insert id="addAdmin">
+		insert into admin(admin_name,password,headimg,aid_num,status) values(#{admin_name},#{password},#{headimg},#{aid_num},#{status})
+	</insert>
+	
+	<select id="findAdmin" resultMap="AdminResult">
+		select * from admin where admin_name=#{admin_name}
+		<if test="password!=null">
+			and password=#{password}
+		</if>
+	</select>
+
+	<select id="getAdminByID" resultMap="AdminResult">
+		select * from admin where aid=#{aid}
+	</select>
+	
+	<update id="updateHeadImg">
+		update admin set headimg=#{headimg} where aid=#{aid}
+	</update>
+	
+	<update id="updateAdminInfo">
+		update admin set password=#{password} where aid=#{aid}
+	</update>
+	
+	
+	
+</mapper>

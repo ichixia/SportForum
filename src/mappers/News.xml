@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljc.dao.NewsDao">
+	
+	<resultMap type="News" id="NewsResult">
+		<id property="nid" column="nid"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="date" column="date" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="lable" column="lable"/>
+		<result property="status" column="status"/>
+		<association property="admin" column="aid" select="com.ljc.dao.AdminDao.getAdminByID" />
+	</resultMap>
+	
+	<select id="getNewsList" resultMap="NewsResult">
+		select * from news order by nid desc
+	</select>
+	
+	<select id="getNewsPageList" resultMap="NewsResult">
+		select * from
+			news,admin
+		where
+			news.aid = admin.aid 
+		order by nid desc limit #{currentPage},#{pageSize}
+	</select>
+	
+	<select id="getNewsByID" resultMap="NewsResult">
+		select * from 
+			news,admin 
+		where 
+			news.aid = admin.aid  
+		and 
+			nid=#{nid}
+	</select>
+	
+	<select id="getNewsListByStatus" resultMap="NewsResult">
+		select * from news 
+		where status in
+		<foreach  item="item" collection="list" index="index"  open="(" separator="," close=")">#{item}</foreach>
+		order by nid desc
+	</select>
+	
+	<insert id="addNews">
+		insert into news(title,content,date,aid,lable) values(#{title},#{content},#{date},#{aid},#{lable})
+	</insert>
+	
+	<select id="getNewsByAID" resultType="News">
+		select * from news where aid=#{aid} order by nid desc
+	</select>
+	
+	<delete id="deleteNewsByID">
+		delete from news where nid=#{nid}
+	</delete>
+	
+	<select id="searchNewsByKey" resultMap="NewsResult">
+		select * from news where title like '%' #{key} '%' order by nid desc
+	</select>
+	
+</mapper>
